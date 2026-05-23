@@ -45,7 +45,13 @@ set_target_properties(OpenZenLoader PROPERTIES
 )
 
 if(MSVC)
+    # requireAdministrator: ensures the loader can OpenProcess /
+    # VirtualAllocEx / CreateRemoteThread against javaw.exe even when the
+    # Minecraft launcher (HMCL, MultiMC) was itself started elevated, and
+    # avoids the silent injection failure that happens on locked-down user
+    # accounts. The user will see one UAC consent prompt when launching
+    # OpenZenLoader.exe.
     set_target_properties(OpenZenLoader PROPERTIES
-        LINK_FLAGS "/SUBSYSTEM:WINDOWS /MANIFESTUAC:\"level='asInvoker' uiAccess='false'\""
+        LINK_FLAGS "/SUBSYSTEM:WINDOWS /MANIFESTUAC:\"level='requireAdministrator' uiAccess='false'\""
     )
 endif()
